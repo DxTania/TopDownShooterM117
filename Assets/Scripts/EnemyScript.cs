@@ -8,6 +8,11 @@ public class EnemyScript : MonoBehaviour {
 	GameObject [] player;
 	Transform playerPosition;
 
+	void Start()
+	{
+		DontDestroyOnLoad (this);
+	}
+
 	void Awake()
 	{
 		player = GameObject.FindGameObjectsWithTag ("Player");
