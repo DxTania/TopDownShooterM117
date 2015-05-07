@@ -7,7 +7,7 @@ public class EnemyScript : MonoBehaviour {
 	public float speed;
 	public GameObject explosionPrefab;
 	private GameObject [] players;
-	Transform playerPosition;
+	private Transform playerPosition;
 
 	void Start() {
 		DontDestroyOnLoad (this);
@@ -39,8 +39,8 @@ public class EnemyScript : MonoBehaviour {
 
 	// Explode enemy on collision
 	public void OnCollisionEnter2D(Collision2D collisionInfo) {
-		Debug.Log("Enemy collided with something!");
 		Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
 		Destroy (transform.gameObject);
+		// TODO: subtract health from player collided with
 	}
 }
