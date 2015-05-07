@@ -7,8 +7,7 @@ public class EnemyScript : MonoBehaviour {
 	private GameObject [] players;
 	Transform playerPosition;
 
-	void Start()
-	{
+	void Start() {
 		DontDestroyOnLoad (this);
 	}
 

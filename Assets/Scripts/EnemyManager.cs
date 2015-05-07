@@ -12,10 +12,12 @@ public class EnemyManager : MonoBehaviour {
 
 	void Start()
 	{
-		// Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
-		InvokeRepeating ("Spawn", spawnTime, spawnTime);
+		// Consistently call the Spawn function after spawnTime delay
+		if (Network.isServer) {
+			InvokeRepeating ("Spawn", spawnTime, spawnTime);
+		}
 	}
-	
+
 	void Spawn ()		
 	{
 		// If the player has no health left, exit the function;
