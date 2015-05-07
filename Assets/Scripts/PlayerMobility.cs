@@ -10,11 +10,13 @@ public class PlayerMobility : MonoBehaviour {
 	public GameObject joystick;
 	public Vector3 startPos;
 	public GameObject jumpButton;
+	public GameObject healthBar;
 
 	void Start () {
 		DontDestroyOnLoad (this);
 		joystick = GameObject.Find ("MobileJoystick");
 		jumpButton = GameObject.Find ("JumpButton");
+
 		if (joystick) {
 			startPos = joystick.transform.position;
 		}

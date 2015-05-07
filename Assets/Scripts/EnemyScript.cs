@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class EnemyScript : MonoBehaviour {
 
 	public float speed;
+	public GameObject explosionPrefab;
 	private GameObject [] players;
 	Transform playerPosition;
 
@@ -15,12 +17,17 @@ public class EnemyScript : MonoBehaviour {
 		// Follow closest player
 		players = GameObject.FindGameObjectsWithTag ("Player");
 
-		if (players.Length == 2) {
-			var player1dist = (this.transform.position - players [0].transform.transform.position).sqrMagnitude;
-			var player2dist = (this.transform.position - players [1].transform.transform.position).sqrMagnitude;
-			
-			playerPosition = player1dist > player2dist ? players [1].transform : players [0].transform;
-			
+		float closestDist = Single.PositiveInfinity;
+		for (var i = 0; i < players.Length; i++) {
+			var dist = (this.transform.position -
+			            players [i].transform.transform.position).sqrMagnitude;
+			if (dist < closestDist) {
+				closestDist = dist;
+				playerPosition = players[i].transform;
+			}
+		}
+
+		if (playerPosition) {
 			var z = Mathf.Atan2 (playerPosition.transform.position.y - transform.position.y,
 			                     playerPosition.transform.position.x - transform.position.x)
 				* Mathf.Rad2Deg - 90;
@@ -28,5 +35,12 @@ public class EnemyScript : MonoBehaviour {
 			transform.eulerAngles = new Vector3 (0, 0, z);
 			GetComponent<Rigidbody2D> ().AddForce (gameObject.transform.up * speed);
 		}
+	}
+
+	// Explode enemy on collision
+	public void OnCollisionEnter2D(Collision2D collisionInfo) {
+		Debug.Log("Enemy collided with something!");
+		Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
+		Destroy (transform.gameObject);
 	}
 }
