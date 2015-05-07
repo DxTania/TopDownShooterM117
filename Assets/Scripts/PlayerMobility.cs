@@ -53,8 +53,7 @@ public class PlayerMobility : MonoBehaviour {
 	// Fire bullet in direction of player
 	public void FireBullet(UnityEngine.EventSystems.BaseEventData baseEvent) {
 		if (GetComponent<NetworkView> ().isMine) {
-			GameObject bullet = (GameObject) Network.Instantiate (
-				bulletPrefab, transform.position, transform.rotation, 0);
+			Network.Instantiate (bulletPrefab, transform.position, transform.rotation, 0);
 		}
 	}
 }
