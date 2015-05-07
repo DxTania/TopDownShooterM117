@@ -32,13 +32,23 @@ public class PlayerMobility : MonoBehaviour {
 		Vector3 diff = joystick.transform.position - startPos;
 		diff.Normalize();
 		float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-
-		if ((Mathf.Abs (diff.x) > 0.1 || Mathf.Abs (diff.y) > 0.1) && GetComponent<NetworkView>().isMine) {
+		var pos = transform.position;
+			
+			
+		if((Mathf.Abs (diff.x) > 0.1 || Mathf.Abs (diff.y) > 0.1) && GetComponent<NetworkView>().isMine) {
 			transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
 			GetComponent<Rigidbody2D>().AddForce(gameObject.transform.up * speed);
-		}
-	}
 
+
+
+		}
+		// Prevent the player from going off screen
+		pos.x = Mathf.Clamp(transform.position.x, 85, Screen.width);
+		pos.y = Mathf.Clamp(transform.position.y, 25, Screen.height-50);
+		transform.position = pos;
+		
+	}
+	
 	// Fire bullet in direction of player
 	public void FireBullet(UnityEngine.EventSystems.BaseEventData baseEvent) {
 		if (GetComponent<NetworkView> ().isMine) {
