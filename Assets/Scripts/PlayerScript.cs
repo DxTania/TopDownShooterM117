@@ -3,16 +3,17 @@ using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityEngine.EventSystems;
 
-public class PlayerMobility : MonoBehaviour {
+public class PlayerScript : MonoBehaviour {
 
+	private GameObject joystick;
+	private Vector3 startPos;
+	private GameObject jumpButton;
+	private GameObject health;
 	public float speed;
 	public GameObject bulletPrefab;
-	public GameObject joystick;
-	public Vector3 startPos;
-	public GameObject jumpButton;
-	public GameObject health;
 
-	void Start () {
+	void Start ()
+	{
 		DontDestroyOnLoad (this);
 		joystick = GameObject.Find ("MobileJoystick");
 		jumpButton = GameObject.Find ("JumpButton");
@@ -35,7 +36,8 @@ public class PlayerMobility : MonoBehaviour {
 	}
 
 	// Rotate player in sync with joystick and move in that direction
-	void FixedUpdate () {
+	void FixedUpdate ()
+	{
 		if (joystick) {
 			Vector3 diff = joystick.transform.position - startPos;
 			diff.Normalize();
@@ -53,7 +55,9 @@ public class PlayerMobility : MonoBehaviour {
 		}
 	}
 
-	public void SubtractHealth () {
+	// Called when enemy collides with player
+	public void PlayerHit ()
+	{
 		float newHealth = health.GetComponent<HealthBar>().SubtractHealth (0.1f);
 		if (newHealth <= 0) {
 			Destroy (transform.gameObject);
@@ -61,7 +65,8 @@ public class PlayerMobility : MonoBehaviour {
 	}
 	
 	// Fire bullet in direction of player
-	public void FireBullet(UnityEngine.EventSystems.BaseEventData baseEvent) {
+	public void FireBullet(UnityEngine.EventSystems.BaseEventData baseEvent)
+	{
 		if (GetComponent<NetworkView> ().isMine) {
 			Network.Instantiate (bulletPrefab, transform.position, transform.rotation, 0);
 		}

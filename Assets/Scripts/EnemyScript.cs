@@ -10,15 +10,18 @@ public class EnemyScript : MonoBehaviour {
 	private GameObject [] players;
 	private Transform playerPosition;
 
-	void Start() {
+	void Start()
+	{
 		DontDestroyOnLoad (this);
+		// TODO: make sure it's the server's enemy spawn point manager ?? 
 		enemyManager = GameObject.Find ("EnemySpawnPointManager").GetComponent<EnemyManager> ();
 	}
 
-	void FixedUpdate () {
-		// Follow closest player
+	void FixedUpdate ()
+	{
 		players = GameObject.FindGameObjectsWithTag ("Player");
 
+		// Follow closest player
 		float closestDist = Single.PositiveInfinity;
 		for (var i = 0; i < players.Length; i++) {
 			var dist = (this.transform.position -
@@ -39,16 +42,17 @@ public class EnemyScript : MonoBehaviour {
 		}
 	}
 
-	// Explode enemy on collision
-	public void OnCollisionEnter2D(Collision2D collisionInfo) {
+	public void OnCollisionEnter2D(Collision2D collisionInfo)
+	{
 		if (collisionInfo.gameObject.tag == "Player") {
+			// Explode enemy on collision
 			Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
 			Destroy (transform.gameObject);
-			// TODO: subtract health from player collided with
-			
-			PlayerMobility playerScript = collisionInfo.gameObject.GetComponent<PlayerMobility> ();
-			playerScript.SubtractHealth ();
-			
+
+			// Subtract health from player
+			collisionInfo.gameObject.GetComponent<PlayerScript> ().PlayerHit ();
+
+			// Update enemy count
 			enemyManager.EnemyDestroyed ();
 		}
 	}

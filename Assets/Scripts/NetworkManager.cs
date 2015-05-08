@@ -8,14 +8,8 @@ public class NetworkManager : MonoBehaviour {
 	private const string gameName = "RoomName";
 	public GameObject playerPrefab;
 
-	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad (this);
-	}
-
-	// Update is called once per frame
-	void Update () {
-
 	}
 
 	private void StartServer () {
