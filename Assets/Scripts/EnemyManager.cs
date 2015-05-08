@@ -39,4 +39,8 @@ public class EnemyManager : MonoBehaviour {
 			enemyCount++; 
 		}
 	}
+
+	public void EnemyDestroyed () {
+		enemyCount--;
+	}
 }

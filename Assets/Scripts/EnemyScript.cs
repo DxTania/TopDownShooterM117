@@ -6,11 +6,13 @@ public class EnemyScript : MonoBehaviour {
 
 	public float speed;
 	public GameObject explosionPrefab;
+	private EnemyManager enemyManager;
 	private GameObject [] players;
 	private Transform playerPosition;
 
 	void Start() {
 		DontDestroyOnLoad (this);
+		enemyManager = GameObject.Find ("EnemySpawnPointManager").GetComponent<EnemyManager> ();
 	}
 
 	void FixedUpdate () {
@@ -39,8 +41,15 @@ public class EnemyScript : MonoBehaviour {
 
 	// Explode enemy on collision
 	public void OnCollisionEnter2D(Collision2D collisionInfo) {
-		Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
-		Destroy (transform.gameObject);
-		// TODO: subtract health from player collided with
+		if (collisionInfo.gameObject.tag == "Player") {
+			Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
+			Destroy (transform.gameObject);
+			// TODO: subtract health from player collided with
+			
+			PlayerMobility playerScript = collisionInfo.gameObject.GetComponent<PlayerMobility> ();
+			playerScript.SubtractHealth ();
+			
+			enemyManager.EnemyDestroyed ();
+		}
 	}
 }

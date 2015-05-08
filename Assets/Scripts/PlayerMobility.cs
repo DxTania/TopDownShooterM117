@@ -10,12 +10,13 @@ public class PlayerMobility : MonoBehaviour {
 	public GameObject joystick;
 	public Vector3 startPos;
 	public GameObject jumpButton;
-	public GameObject healthBar;
+	public GameObject health;
 
 	void Start () {
 		DontDestroyOnLoad (this);
 		joystick = GameObject.Find ("MobileJoystick");
 		jumpButton = GameObject.Find ("JumpButton");
+		health = GameObject.FindWithTag ("Health");
 
 		if (joystick) {
 			startPos = joystick.transform.position;
@@ -49,6 +50,13 @@ public class PlayerMobility : MonoBehaviour {
 			pos.x = Mathf.Clamp(this.transform.position.x, 85, Screen.width);
 			pos.y = Mathf.Clamp(this.transform.position.y, 25, Screen.height-50);
 			this.transform.position = pos;
+		}
+	}
+
+	public void SubtractHealth () {
+		float newHealth = health.GetComponent<HealthBar>().SubtractHealth (0.1f);
+		if (newHealth <= 0) {
+			Destroy (transform.gameObject);
 		}
 	}
 	
