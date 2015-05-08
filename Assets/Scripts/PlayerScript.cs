@@ -69,6 +69,8 @@ public class PlayerScript : MonoBehaviour {
 			// Subtract health from player
 			float newHealth = health.GetComponent<HealthBar>().SubtractHealth (0.25f);
 			if (newHealth <= 0) {
+				EventTrigger eventTrigger = jumpButton.GetComponent<EventTrigger>();
+				eventTrigger.enabled = false;
 				Network.Destroy (transform.gameObject);
 			}
 		}

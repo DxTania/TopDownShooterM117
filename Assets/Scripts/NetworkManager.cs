@@ -4,8 +4,8 @@ using System.Collections;
 public class NetworkManager : MonoBehaviour {
 
 	private HostData[] hostList;
-	private const string typeName = "TopDownShooterM1172222";
-	private const string gameName = "BLAH!22222";
+	private const string typeName = "UCLA CSM117";
+	private const string gameName = "TopDown";
 	private bool gameStarted = false;
 	public GameObject playerPrefab;
 
