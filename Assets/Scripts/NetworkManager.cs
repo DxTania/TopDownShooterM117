@@ -11,6 +11,7 @@ public class NetworkManager : MonoBehaviour {
 
 	void Start () {
 		DontDestroyOnLoad (this);
+		Application.LoadLevel ("menu");
 	}
 
 	void Update () {
@@ -18,15 +19,18 @@ public class NetworkManager : MonoBehaviour {
 		if (gameStarted && Network.isServer && players.Length == 0) {
 			Network.Disconnect();
 			MasterServer.UnregisterHost();
-			Application.LoadLevel ("menu");
 			gameStarted = false;
 		}
 	}
 
+	void OnPlayerDisconnected(NetworkPlayer player) {
+		Debug.Log("Clean up after player " + player);
+		Network.RemoveRPCs(player);
+		Network.DestroyPlayerObjects(player);
+	}
+
 	void OnDisconnectedFromServer(NetworkDisconnection info) {
-		if (Network.isClient) {
-			Application.LoadLevel ("menu");
-		}
+		Application.LoadLevel ("menu");
 	}
 
 	private void StartServer () {
@@ -54,7 +58,7 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded (int l) {
-		if (l == 1) {
+		if (l == 2) {
 			SpawnPlayer ();
 			gameStarted = true;
 		}
