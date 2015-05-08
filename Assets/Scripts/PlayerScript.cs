@@ -49,26 +49,28 @@ public class PlayerScript : MonoBehaviour {
 				GetComponent<Rigidbody2D>().AddForce(gameObject.transform.up * speed);
 			}
 			// Prevent the player from going off screen
-			pos.x = Mathf.Clamp(this.transform.position.x, 85, Screen.width);
-			pos.y = Mathf.Clamp(this.transform.position.y, 25, Screen.height-50);
+			pos.x = Mathf.Clamp(this.transform.position.x, 25, Screen.width - 25);
+			pos.y = Mathf.Clamp(this.transform.position.y, 25, Screen.height - 25);
 			this.transform.position = pos;
 		}
 	}
 
-	// Called when enemy collides with player
-	public void PlayerHit ()
-	{
-		float newHealth = health.GetComponent<HealthBar>().SubtractHealth (0.1f);
-		if (newHealth <= 0) {
-			Destroy (transform.gameObject);
-		}
-	}
-	
 	// Fire bullet in direction of player
 	public void FireBullet(UnityEngine.EventSystems.BaseEventData baseEvent)
 	{
 		if (GetComponent<NetworkView> ().isMine) {
 			Network.Instantiate (bulletPrefab, transform.position, transform.rotation, 0);
+		}
+	}
+
+	public void OnTriggerEnter2D(Collider2D collisionInfo)
+	{
+		if (collisionInfo.gameObject.tag == "Enemy" && GetComponent<NetworkView> ().isMine) {
+			// Subtract health from player
+			float newHealth = health.GetComponent<HealthBar>().SubtractHealth (0.25f);
+			if (newHealth <= 0) {
+				Network.Destroy (transform.gameObject);
+			}
 		}
 	}
 }

@@ -6,12 +6,15 @@ public class BulletScript : MonoBehaviour {
 
 	void Start ()
 	{
-		GetComponent<Rigidbody2D>().GetComponent<Rigidbody2D> ().AddForce (transform.up * bulletSpeed);
+		GetComponent<Rigidbody2D>().GetComponent<Rigidbody2D> ()
+			.AddForce (transform.up * bulletSpeed);
 	}
 
 	// Destroy bullet once it's off screen
 	void OnBecameInvisible ()
 	{
-		DestroyObject (gameObject);
+		if (GetComponent<NetworkView> ().isMine) {
+			Network.Destroy (gameObject);
+		}
 	}
 }

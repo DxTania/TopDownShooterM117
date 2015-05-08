@@ -4,12 +4,29 @@ using System.Collections;
 public class NetworkManager : MonoBehaviour {
 
 	private HostData[] hostList;
-	private const string typeName = "TopDownShooterM117";
-	private const string gameName = "RoomName";
+	private const string typeName = "TopDownShooterM1172222";
+	private const string gameName = "BLAH!22222";
+	private bool gameStarted = false;
 	public GameObject playerPrefab;
 
 	void Start () {
 		DontDestroyOnLoad (this);
+	}
+
+	void Update () {
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		if (gameStarted && Network.isServer && players.Length == 0) {
+			Network.Disconnect();
+			MasterServer.UnregisterHost();
+			Application.LoadLevel ("menu");
+			gameStarted = false;
+		}
+	}
+
+	void OnDisconnectedFromServer(NetworkDisconnection info) {
+		if (Network.isClient) {
+			Application.LoadLevel ("menu");
+		}
 	}
 
 	private void StartServer () {
@@ -37,7 +54,10 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded (int l) {
-		SpawnPlayer ();
+		if (l == 1) {
+			SpawnPlayer ();
+			gameStarted = true;
+		}
 	}
 
 	void OnServerInitialized () {

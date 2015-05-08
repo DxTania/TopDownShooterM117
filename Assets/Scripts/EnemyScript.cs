@@ -13,8 +13,10 @@ public class EnemyScript : MonoBehaviour {
 	void Start()
 	{
 		DontDestroyOnLoad (this);
-		// TODO: make sure it's the server's enemy spawn point manager ?? 
-		enemyManager = GameObject.Find ("EnemySpawnPointManager").GetComponent<EnemyManager> ();
+
+		if (GetComponent<NetworkView> ().isMine) {
+			enemyManager = GameObject.Find ("EnemySpawnPointManager").GetComponent<EnemyManager> ();
+		}
 	}
 
 	void FixedUpdate ()
@@ -42,15 +44,12 @@ public class EnemyScript : MonoBehaviour {
 		}
 	}
 
-	public void OnCollisionEnter2D(Collision2D collisionInfo)
+	public void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
-		if (collisionInfo.gameObject.tag == "Player") {
+		if (collisionInfo.gameObject.tag == "Player" && GetComponent<NetworkView> ().isMine) {
 			// Explode enemy on collision
 			Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
-			Destroy (transform.gameObject);
-
-			// Subtract health from player
-			collisionInfo.gameObject.GetComponent<PlayerScript> ().PlayerHit ();
+			Network.Destroy (transform.gameObject);
 
 			// Update enemy count
 			enemyManager.EnemyDestroyed ();
