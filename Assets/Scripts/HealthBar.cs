@@ -12,6 +12,13 @@ public class HealthBar : MonoBehaviour {
 
 	public float SubtractHealth (float amount) {
 		healthBar.fillAmount -= amount;
+
+		if (healthBar.fillAmount <= 0.5f && healthBar.fillAmount > 0.25f) {
+			healthBar.color = Color.yellow;
+		} else if (healthBar.fillAmount <= 0.25f) {
+			healthBar.color = Color.red;
+		}
+
 		return healthBar.fillAmount;
 	}
 }
