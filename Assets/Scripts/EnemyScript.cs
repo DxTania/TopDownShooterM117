@@ -46,7 +46,9 @@ public class EnemyScript : MonoBehaviour {
 
 	public void OnTriggerEnter2D(Collider2D collisionInfo)
 	{
-		if (collisionInfo.gameObject.tag == "Player" && GetComponent<NetworkView> ().isMine) {
+		if ((collisionInfo.gameObject.tag == "Player" ||
+		     collisionInfo.gameObject.tag == "Bullet") &&
+		    GetComponent<NetworkView> ().isMine) {
 			// Explode enemy on collision
 			Network.Instantiate (explosionPrefab, transform.position, transform.rotation, 0);
 			Network.Destroy (transform.gameObject);
