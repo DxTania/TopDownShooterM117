@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class EnemyScript : MonoBehaviour {
 
@@ -55,6 +56,17 @@ public class EnemyScript : MonoBehaviour {
 
 			// Update enemy count
 			enemyManager.EnemyDestroyed ();
+		}
+
+		if (collisionInfo.gameObject.tag == "Bullet") {
+			// Update score
+			Text score = GameObject.FindGameObjectWithTag("Score").GetComponent<Text>();
+			string scoreNum = (Convert.ToInt32(score.text) + 10).ToString ();
+			int padding = 5 - scoreNum.Length;
+			for (var i = 0; i < padding; i++) {
+				scoreNum = "0" + scoreNum;
+			}
+			score.text = scoreNum;
 		}
 	}
 }

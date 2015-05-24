@@ -8,6 +8,8 @@ public class NetworkManager : MonoBehaviour {
 	private const string gameName = "TopDown";
 	private bool gameStarted = false;
 	public GameObject playerPrefab;
+	public GameObject scorePrefab;
+	private GameObject score;
 
 	void Start () {
 		DontDestroyOnLoad (this);
@@ -62,6 +64,14 @@ public class NetworkManager : MonoBehaviour {
 			SpawnPlayer ();
 			gameStarted = true;
 		}
+
+		if (Network.isServer) {
+			GameObject mobileControl = GameObject.Find ("MobileSingleStickControl");
+			Network.Instantiate (scorePrefab, new Vector3(50, 199, 0), Quaternion.identity, 0);
+			score = GameObject.FindGameObjectWithTag ("Score");
+			score.transform.SetParent(mobileControl.transform);
+			score.transform.localScale = new Vector3(1, 1, 1);
+		}
 	}
 
 	void OnServerInitialized () {
@@ -78,13 +88,13 @@ public class NetworkManager : MonoBehaviour {
 			if (GUI.Button (new Rect (100, 100, 250, 100), "Start Server")) {
 				StartServer ();
 			}
-			if (GUI.Button(new Rect(100, 250, 250, 100), "Refresh Hosts")) {
-				RefreshHostList();
+			if (GUI.Button (new Rect (100, 250, 250, 100), "Refresh Hosts")) {
+				RefreshHostList ();
 			}
 			if (hostList != null) {
 				for (int i = 0; i < hostList.Length; i++) {
-					if (GUI.Button(new Rect(400, 100 + (110 * i), 300, 100), hostList[i].gameName))
-						JoinServer(hostList[i]);
+					if (GUI.Button (new Rect (400, 100 + (110 * i), 300, 100), hostList [i].gameName))
+						JoinServer (hostList [i]);
 				}
 			}
 		}
