@@ -9,7 +9,6 @@ public class NetworkManager : MonoBehaviour {
 	private bool gameStarted = false;
 	public GameObject playerPrefab;
 	public GameObject scorePrefab;
-	private GameObject score;
 
 	void Start () {
 		DontDestroyOnLoad (this);
@@ -19,6 +18,11 @@ public class NetworkManager : MonoBehaviour {
 	void Update () {
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		if (gameStarted && Network.isServer && players.Length == 0) {
+			Network.Destroy(GameObject.FindGameObjectWithTag("ScoreObject"));
+			GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			for (var i = 0; i < enemies.Length; i++) {
+				Network.Destroy(enemies[i]);
+			}
 			Network.Disconnect();
 			MasterServer.UnregisterHost();
 			gameStarted = false;
@@ -66,11 +70,7 @@ public class NetworkManager : MonoBehaviour {
 		}
 
 		if (Network.isServer) {
-			GameObject mobileControl = GameObject.Find ("MobileSingleStickControl");
-			Network.Instantiate (scorePrefab, new Vector3(50, 199, 0), Quaternion.identity, 0);
-			score = GameObject.FindGameObjectWithTag ("Score");
-			score.transform.SetParent(mobileControl.transform);
-			score.transform.localScale = new Vector3(1, 1, 1);
+			Network.Instantiate (scorePrefab, new Vector3(0, -160, 0), Quaternion.identity, 0);
 		}
 	}
 
