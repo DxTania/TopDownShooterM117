@@ -49,8 +49,12 @@ public class PlayerScript : MonoBehaviour {
 				GetComponent<Rigidbody2D>().AddForce(gameObject.transform.up * speed);
 			}
 			// Prevent the player from going off screen
-			pos.x = Mathf.Clamp(this.transform.position.x, 25, Screen.width - 25);
-			pos.y = Mathf.Clamp(this.transform.position.y, 25, Screen.height - 25);
+			if (pos.x < 25) pos.x = 25;
+			else if (pos.x > Screen.width - 25) pos.x = Screen.width - 25;
+
+			if (pos.y < 25) pos.y = 25;
+			else if (pos.y > Screen.height - 25) pos.y = Screen.height - 25;
+
 			this.transform.position = pos;
 		}
 	}
