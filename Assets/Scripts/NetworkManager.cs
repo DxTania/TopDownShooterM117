@@ -13,6 +13,12 @@ public class NetworkManager : MonoBehaviour {
 	void Start () {
 		DontDestroyOnLoad (this);
 		Application.LoadLevel ("menu");
+		BtConnector.moduleName ("HC-06");
+		//MasterServer.ipAddress = "149.142.250.42";
+		/*MasterServer.ipAddress = "169.232.80.18";
+		MasterServer.port = 23466;
+		Network.natFacilitatorIP = "169.232.80.18";
+		Network.natFacilitatorPort = 50005;*/
 	}
 
 	void Update () {
@@ -97,6 +103,14 @@ public class NetworkManager : MonoBehaviour {
 						JoinServer (hostList [i]);
 				}
 			}
+			if(GUI.Button(new Rect(400, 250, 250, 100), "Connect")) 
+			{
+				if (!BtConnector.isBluetoothEnabled ()){
+					BtConnector.askEnableBluetooth();
+				} else BtConnector.connect();
+				BtConnector.stopListen();
+			}
+
 		}
 	}
 }
